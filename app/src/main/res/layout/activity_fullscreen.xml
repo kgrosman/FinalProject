@@ -21,7 +21,7 @@
         android:layout_width="1921px"
         android:layout_height="1155px"
         android:layout_gravity="bottom|left"
-        app:srcCompat="@drawable/grid" />
+        app:srcCompat="@mipmap/grid" />
 
     <LinearLayout
         android:id="@+id/fullscreen_content_controls"
