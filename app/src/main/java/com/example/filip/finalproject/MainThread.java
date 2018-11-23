@@ -1,13 +1,14 @@
 package com.example.filip.finalproject;
 
 import android.graphics.Canvas;
+import android.util.EventLog;
 import android.view.SurfaceHolder;
 
 
 public class MainThread extends Thread {
 
-    private SurfaceHolder surfaceHolder;
-    private GameView gameView;
+    public SurfaceHolder surfaceHolder;
+    public GameView gameView;
     public static Canvas canvas;
 
     public MainThread(SurfaceHolder surfaceHolder, GameView gameView) {
