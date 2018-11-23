@@ -27,7 +27,7 @@ import android.graphics.drawable.Drawable;
 public class FullscreenActivity extends Activity implements View.OnTouchListener{
 
     /*
-    This method should draw all objects on screen.
+    This method should create the whole screen.
      */
 
     @Override
@@ -42,6 +42,10 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
 
 
     }
+
+    /*
+    This will register the touch and send it to GameEngine for computing.
+     */
     @Override
     public boolean onTouch (View view, MotionEvent event) {
         GameEngine.tapProcessor((int) event.getX(), (int) event.getY());
