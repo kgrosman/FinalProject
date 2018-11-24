@@ -12,8 +12,8 @@ public class SelectedUnit {
     private int[] coordinates = new int[]{0, 0}; //Unit's coordinates
 
     SelectedUnit(Context context,int x ,int y) { //Creates a selected unit on given coordinates
-        coordinates[0] = x; //sets the unit at coordinates
-        coordinates[1] = y;
+        coordinates[0] = x / 128; //sets the unit at coordinates
+        coordinates[1] = y / 128;
 
         if (GameEngine.BoardSprites[x/128][y/128] instanceof Units) { //if selected unit is Green Infantry, use infgs (INFantry Green Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
@@ -35,6 +35,6 @@ public class SelectedUnit {
 
     //draws the selected unit when selected.draw(canvas) is called in GameView function.
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(icon, coordinates[0] / 128, coordinates[1] / 128, null);
+        canvas.drawBitmap(icon, coordinates[0] * 128, coordinates[1] * 128, null);
     }
 }

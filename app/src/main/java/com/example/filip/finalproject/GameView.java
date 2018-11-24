@@ -48,7 +48,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         o.inScaled = false;
         grid = new GameEngine(BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid, o)); // these lines create the board.
         theContext = this.getContext(); // Stores the context, see the variable comment above
-        new Units(theContext); // Creates a starting unit. Contexts MUST be passed, or game won't add texture to the unit.
+        for (int i = 0; i < 3; i++) {
+            new Units(theContext, 0, i * 2); // Creates a starting unit. Contexts MUST be passed, or game won't add texture to the unit.
+        }
+
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
 
         thread.start(); // starts the tread
@@ -81,8 +84,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas != null) {
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
 
-            for (int j = 0; j < units.length; j++) {
-                units[j].draw(canvas); //draws the units from units array found in GameView class.
+            for (int mn = 0; mn < units.length; mn++) {
+                units[mn].draw(canvas); //draws the units from units array found in GameView class.
             }
 
             if (GameEngine.selected != null) { //If no units are selected yet, do nothing
@@ -94,7 +97,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             paint.setTextSize(60);
             paint.setColor(Color.RED);
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
-            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + units.length , 2000, 1000, paint);
+            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + units.length + " " , 2000, 1000, paint);
 
         }
     }
