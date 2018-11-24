@@ -10,6 +10,6 @@ public class Infantry extends Units {
     public static int GreenMovement = 4; // Movement value of Green's infantry, this value can be changed
 
     Infantry(Context context, int x, int y, Player player) {
-        super(context,x,y,player, "Infantry");
+        super(context,x,y,player, "Infantry", GreenAttack, GreenDefence, GreenHP, GreenHP, GreenMovement);
     }
 }

@@ -13,6 +13,11 @@ public class Units {
     public String unitType;
     public int[] coordinates = new int[]{14, 8}; //Unit's coordinates, because this is the coordinates of the image value must be multiplied by 128 to display on board properly.
     public Player owner;
+    public int attack;
+    public int defence;
+    public int HP;
+    public int maxHP;
+    public int movement;
 
     //Two methods below are from previous versions of the code, I might need them again later.
     /*public Units(Bitmap bmp) {
@@ -42,8 +47,13 @@ public class Units {
     }*/
 
     //creates a new unit and initializes icon to Infantry unit, and sets the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
-    public Units(Context context, int x, int y, Player player, String unitType) {
+    public Units(Context context, int x, int y, Player player, String unitType, int atc, int def, int hp, int maxhp, int mov) {
 
+        this.attack = atc;
+        this.defence = def;
+        this.HP = hp;
+        this.maxHP = maxhp;
+        this.movement = mov;
         this.unitType = unitType;
         this.owner = player;
         if (owner == GameEngine.green && unitType.equals("Infantry")) {

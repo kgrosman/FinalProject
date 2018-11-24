@@ -40,11 +40,11 @@ public class GameEngine {
     public static void tapProcessor (int x, int y) {
 
 
-        if (x/128 >= 15 || y/128 >=9 ) { // If tap is outside the grid, do nothing. This will be changed later.
+        if (x / 128 >= 15 || y / 128 >= 9) { // If tap is outside the grid, do nothing. This will be changed later.
             return;
         }
 
-        if (lastTap[0] / 128 == x / 128 && lastTap[1] / 128 == y / 128)  { // if this tap was on the same square coordinates (see function below) as the last tap, do nothing. This makes sure that unit gets tapped only once.
+        if (lastTap[0] / 128 == x / 128 && lastTap[1] / 128 == y / 128) { // if this tap was on the same square coordinates (see function below) as the last tap, do nothing. This makes sure that unit gets tapped only once.
             return;
         }
 
@@ -57,33 +57,29 @@ public class GameEngine {
 
         if (BoardSprites[x / 128][y / 128] != null && theUnit == null) { //If no unit is selected and user taps on a unit, select it.
             theUnit = BoardSprites[x / 128][y / 128];
-            selected = new SelectedUnit(GameView.theContext,x , y ,theUnit.owner);
+            selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner);
+            return;
+        }
+        if (theUnit != null && BoardSprites[x / 128][y / 128] == null && //if user taps with unit selected on an empty square, move it
+                (theUnit.movement >= getSquareDistance           //also check if unit is in range.
+                        (getCoordinates(theUnit)[0], x / 128,
+                                getCoordinates(theUnit)[1], y / 128))) {
+            moveTo(theUnit, x / 128, y / 128); //and then move the unit, and un-select it.
+            selected = null;
+            theUnit = null;
             return;
         }
 
-        if (theUnit.unitType.equals("Infantry")) { //because Java is trash collecting everything and stores Infantry as Unit object instead of Infantry object, I have to write duplicate methods of every unit type :(
-
-            if (theUnit != null && BoardSprites[x / 128][y / 128] == null && //if user taps with unit selected on an empty square, move it
-                    (Infantry.GreenMovement >= getSquareDistance           //also check if unit is in range.
-                            (getCoordinates(theUnit)[0], x / 128,
-                                    getCoordinates(theUnit)[1], y / 128))) {
-                moveTo(theUnit, x / 128, y / 128); //and then move the unit, and un-select it.
-                selected = null;
-                theUnit = null;
-                return;
+        if (theUnit != null && BoardSprites[x / 128][y / 128] != null &&
+                BoardSprites[x / 128][y / 128].owner != theUnit.owner && //if user taps with unit selected on an opponent's unit, attack it
+                (theUnit.movement >= getSquareDistance           //and check if unit is in range.
+                        (getCoordinates(theUnit)[0], x / 128,
+                                getCoordinates(theUnit)[1], y / 128))) {
+            killUnit(BoardSprites[x / 128][y / 128], x / 128, y / 128); //and then move the unit, and un-select it.
+            selected = null;
+            theUnit = null;
+            return;
             }
-
-            if (theUnit != null && BoardSprites[x / 128][y / 128] != null && 
-                    BoardSprites[x / 128][y / 128].owner != theUnit.owner && //if user taps with unit selected on an opponent's unit, attack it
-                    (Infantry.GreenMovement >= getSquareDistance           //and check if unit is in range.
-                            (getCoordinates(theUnit)[0], x / 128,
-                                    getCoordinates(theUnit)[1], y / 128))) {
-                killUnit(BoardSprites[x / 128][y / 128], x / 128, y / 128); //and then move the unit, and un-select it.
-                selected = null;
-                theUnit = null;
-                return;
-            }
-        }
 
         if (selected != null) { //If user taps on a square that is out of range while some unit is selected, un-select the unit
             selected = null;
