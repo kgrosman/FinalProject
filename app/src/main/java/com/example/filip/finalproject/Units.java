@@ -66,6 +66,26 @@ public class Units {
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr, o);
         }
+        if (owner == GameEngine.green && unitType.equals("Cavalry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavg, o);
+        }
+        if (owner == GameEngine.red && unitType.equals("Cavalry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavr, o);
+        }
+        if (owner == GameEngine.green && unitType.equals("Artillery")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artg, o);
+        }
+        if (owner == GameEngine.red && unitType.equals("Artillery")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr, o);
+        }
 
         coordinates[0] = x;
         coordinates[1] = y;

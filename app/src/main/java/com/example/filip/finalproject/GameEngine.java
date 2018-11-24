@@ -57,7 +57,7 @@ public class GameEngine {
 
         if (BoardSprites[x / 128][y / 128] != null && theUnit == null) { //If no unit is selected and user taps on a unit, select it.
             theUnit = BoardSprites[x / 128][y / 128];
-            selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner);
+            selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
             return;
         }
         if (theUnit != null && BoardSprites[x / 128][y / 128] == null && //if user taps with unit selected on an empty square, move it

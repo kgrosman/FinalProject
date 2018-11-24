@@ -50,14 +50,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         o.inScaled = false;
         grid = new GameEngine(BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid, o)); // these lines create the board.
         theContext = this.getContext(); // Stores the context, see the variable comment above
+
         for (int i = 0; i < 3; i++) {
-            new Infantry(theContext, 0, i * 2, GameEngine.green); // Creates a starting unit. Contexts MUST be passed, or game won't add texture to the unit.
+            new Infantry(theContext, 0, i * 2, GameEngine.green); // These for loops create starting units.
         }
 
         for (int i = 1; i < 3; i++) {
-            new Infantry(theContext, i, i * 2, GameEngine.red); // Creates a starting unit. Contexts MUST be passed, or game won't add texture to the unit.
+            new Infantry(theContext, i, i * 2, GameEngine.red);
         }
 
+        for (int i = 1; i < 3; i++) {
+            new Cavalry(theContext, i * 2, i * 2, GameEngine.green);
+        }
+        for (int i = 1; i < 3; i++) {
+            new Cavalry(theContext, i * 3, i * 2, GameEngine.red);
+        }
+
+        for (int i = 5; i < 6; i++) {
+            new Artillery(theContext, i, i, GameEngine.green);
+        }
+        for (int i = 5; i < 6; i++) {
+            new Artillery(theContext, i + 1, i + 1, GameEngine.red);
+        }
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
 
         thread.start(); // starts the tread
@@ -90,8 +104,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas != null) {
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
 
-            for (int mn = 0; mn < units.length; mn++) {
-                units[mn].draw(canvas); //draws the units from units array found in GameView class.
+            for (int i = 0; i < units.length; i++) {
+                units[i].draw(canvas); //draws the units from units array found in GameView class.
             }
 
             if (GameEngine.selected != null) { //If no units are selected yet, do nothing
