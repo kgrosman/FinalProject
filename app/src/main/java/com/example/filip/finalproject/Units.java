@@ -10,14 +10,12 @@ import android.graphics.Canvas;
 public class Units {
 
     private Bitmap icon; // Unit's icon
+    public String unitType;
     public int[] coordinates = new int[]{14, 8}; //Unit's coordinates, because this is the coordinates of the image value must be multiplied by 128 to display on board properly.
-    public static int GreenAttack = 4; // Attack value of Green's infantry, this value can be changed
-    public static int GreenDefence = 1; // Defence value of Green's infantry, this value can be changed
-    public static int GreenHP = 10; // HP value of Green's infantry, this value can be changed
-    public static int movement = 4; // Movement value of Green's infantry, this value can be changed
+    public Player owner;
 
-    //creates a new unit and initializes icon to Infantry unit. This will be changed later, and is only used in initialization faze atm.
-    public Units(Bitmap bmp) {
+    //Two methods below are from previous versions of the code, I might need them again later.
+    /*public Units(Bitmap bmp) {
         icon = bmp;
 
         // modifies GaveView's units array to add the unit.
@@ -27,10 +25,9 @@ public class Units {
         }
         toReturn[toReturn.length - 1] = this;
         GameView.units = toReturn;
-    }
+    }*/
 
-    //creates a new unit and initializes icon to Infantry unit. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
-    public Units(Context context) {
+    /*public Units(Context context) {
 
         BitmapFactory.Options o = new Options();
         o.inScaled = false;
@@ -42,14 +39,23 @@ public class Units {
         toReturn[toReturn.length - 1] = this;
         GameView.units = toReturn;
         GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
-    }
+    }*/
 
-    //same as above, but creates a new unit at given coordinates
-    public Units(Context context, int x, int y) {
+    //creates a new unit and initializes icon to Infantry unit, and sets the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
+    public Units(Context context, int x, int y, Player player, String unitType) {
 
-        BitmapFactory.Options o = new Options();
-        o.inScaled = false;
-        icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg, o);
+        this.unitType = unitType;
+        this.owner = player;
+        if (owner == GameEngine.green && unitType.equals("Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg, o);
+        }
+        if (owner == GameEngine.red && unitType.equals("Infantry")) {
+            BitmapFactory.Options o = new Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr, o);
+        }
 
         coordinates[0] = x;
         coordinates[1] = y;

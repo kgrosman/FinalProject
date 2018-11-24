@@ -10,15 +10,25 @@ public class SelectedUnit {
 
     private Bitmap icon; // Unit's icon
     private int[] coordinates = new int[]{0, 0}; //Unit's coordinates
+    public Player owner;
 
-    SelectedUnit(Context context,int x ,int y) { //Creates a selected unit on given coordinates
+    SelectedUnit(Context context,int x ,int y, Player player) { //Creates a selected unit on given coordinates
+
+        this.owner = player;
         coordinates[0] = x / 128; //sets the unit at coordinates
         coordinates[1] = y / 128;
 
-        if (GameEngine.BoardSprites[x/128][y/128] instanceof Units) { //if selected unit is Green Infantry, use infgs (INFantry Green Selected) texture
+        if (GameEngine.BoardSprites[x/128][y/128] instanceof Units && player == GameEngine.green) { //if selected unit is Green Infantry, use infgs (INFantry Green Selected) texture
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inScaled = false;
             icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.infgs, o);
+            return;
+        }
+
+        if (GameEngine.BoardSprites[x/128][y/128] instanceof Units && player == GameEngine.red) { //if selected unit is Green Infantry, use infgs (INFantry Green Selected) texture
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inScaled = false;
+            icon = BitmapFactory.decodeResource(context.getResources(), R.mipmap.infrs, o);
             return;
         }
 

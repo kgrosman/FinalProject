@@ -44,12 +44,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
+        GameEngine.green = new Player("green");
+        GameEngine.red = new Player("red");
         BitmapFactory.Options o = new Options();
         o.inScaled = false;
         grid = new GameEngine(BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid, o)); // these lines create the board.
         theContext = this.getContext(); // Stores the context, see the variable comment above
         for (int i = 0; i < 3; i++) {
-            new Units(theContext, 0, i * 2); // Creates a starting unit. Contexts MUST be passed, or game won't add texture to the unit.
+            new Infantry(theContext, 0, i * 2, GameEngine.green); // Creates a starting unit. Contexts MUST be passed, or game won't add texture to the unit.
+        }
+
+        for (int i = 1; i < 3; i++) {
+            new Infantry(theContext, i, i * 2, GameEngine.red); // Creates a starting unit. Contexts MUST be passed, or game won't add texture to the unit.
         }
 
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
@@ -100,5 +106,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + units.length + " " , 2000, 1000, paint);
 
         }
+    }
+
+    public static void removeSprite (int index) {
+        Units[] toReplace = new Units[units.length - 1];
+        for (int i = 0; i < index; i++) {
+            toReplace[i] = units[i];
+        }
+        for (int i = index; i < toReplace.length; i++) {
+            toReplace[i] = units[i + 1];
+        }
+        units = toReplace;
     }
 }

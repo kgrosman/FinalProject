@@ -16,6 +16,8 @@ public class GameEngine {
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
     public static Units[][] BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
+    public static Player green;
+    public static Player red;
 
 
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
@@ -45,26 +47,45 @@ public class GameEngine {
         if (lastTap[0] / 128 == x / 128 && lastTap[1] / 128 == y / 128)  { // if this tap was on the same square coordinates (see function below) as the last tap, do nothing. This makes sure that unit gets tapped only once.
             return;
         }
+
         lastTap[0] = x; //sets the lastTap coordinates
         lastTap[1] = y;
 
+        if (selected == null && BoardSprites[x / 128][y / 128] == null) { //if user taps on empty square with no units selected, do nothing
+            return;
+        }
+
         if (BoardSprites[x / 128][y / 128] != null && theUnit == null) { //If no unit is selected and user taps on a unit, select it.
-            selected = new SelectedUnit(GameView.theContext,x , y );
             theUnit = BoardSprites[x / 128][y / 128];
+            selected = new SelectedUnit(GameView.theContext,x , y ,theUnit.owner);
             return;
         }
 
-        if (theUnit != null && BoardSprites[x / 128][y / 128] == null && //if user taps with unit selected on an empty square, move it
-                (theUnit.movement >= getSquareDistance           //and check if unit is in range.
-                        (getCoordinates(theUnit)[0], x / 128,
-                                getCoordinates(theUnit)[1], y / 128 ))) {
-            moveTo(theUnit, x/128, y/128); //and then move the unit, and un-select it.
-            selected = null;
-            theUnit = null;
-            return;
+        if (theUnit.unitType.equals("Infantry")) { //because Java is trash collecting everything and stores Infantry as Unit object instead of Infantry object, I have to write duplicate methods of every unit type :(
+
+            if (theUnit != null && BoardSprites[x / 128][y / 128] == null && //if user taps with unit selected on an empty square, move it
+                    (Infantry.GreenMovement >= getSquareDistance           //also check if unit is in range.
+                            (getCoordinates(theUnit)[0], x / 128,
+                                    getCoordinates(theUnit)[1], y / 128))) {
+                moveTo(theUnit, x / 128, y / 128); //and then move the unit, and un-select it.
+                selected = null;
+                theUnit = null;
+                return;
+            }
+
+            if (theUnit != null && BoardSprites[x / 128][y / 128] != null && 
+                    BoardSprites[x / 128][y / 128].owner != theUnit.owner && //if user taps with unit selected on an opponent's unit, attack it
+                    (Infantry.GreenMovement >= getSquareDistance           //and check if unit is in range.
+                            (getCoordinates(theUnit)[0], x / 128,
+                                    getCoordinates(theUnit)[1], y / 128))) {
+                killUnit(BoardSprites[x / 128][y / 128], x / 128, y / 128); //and then move the unit, and un-select it.
+                selected = null;
+                theUnit = null;
+                return;
+            }
         }
 
-        if (BoardSprites[x/128][y/128] == null && selected != null) { //If user taps on an empty square while some unit is selected, un-select the unit
+        if (selected != null) { //If user taps on a square that is out of range while some unit is selected, un-select the unit
             selected = null;
             theUnit = null;
             return;
@@ -97,6 +118,16 @@ public class GameEngine {
         u.moveTo(x,y);
         BoardSprites[x][y] = u;
         BoardSprites[a][b] = null;
+    }
+
+    public static void killUnit(Units u, int x, int y) { //kills the unit at given coordinates
+        BoardSprites[x][y] = null;
+        for (int i = 0; i < GameView.units.length; i++) {
+            if (GameView.units[i] == u) {
+                GameView.removeSprite(i);
+                return;
+            }
+        }
     }
 
     //returns the SquareCoordinates of coordinates. Every Square coordinate represents a square on the board, since every square is 128 pixels the coordinates have to be divided by 128.
