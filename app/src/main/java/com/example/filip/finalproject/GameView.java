@@ -51,26 +51,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         grid = new GameEngine(BitmapFactory.decodeResource(this.getResources(), R.mipmap.grid, o)); // these lines create the board.
         theContext = this.getContext(); // Stores the context, see the variable comment above
 
+        // These for loops create starting units.
         for (int i = 0; i < 3; i++) {
-            new Infantry(theContext, 0, i * 2, GameEngine.green); // These for loops create starting units.
+            new Infantry(theContext, 2, i * 2, GameEngine.green);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            new Infantry(theContext, 11, i * 2, GameEngine.red);
         }
 
         for (int i = 1; i < 3; i++) {
-            new Infantry(theContext, i, i * 2, GameEngine.red);
-        }
-
-        for (int i = 1; i < 3; i++) {
-            new Cavalry(theContext, i * 2, i * 2, GameEngine.green);
+            new Cavalry(theContext, 1, i * 2, GameEngine.green);
         }
         for (int i = 1; i < 3; i++) {
-            new Cavalry(theContext, i * 3, i * 2, GameEngine.red);
+            new Cavalry(theContext, 12, i * 2, GameEngine.red);
         }
 
         for (int i = 5; i < 6; i++) {
-            new Artillery(theContext, i, i, GameEngine.green);
+            new Artillery(theContext, 0, i, GameEngine.green);
         }
         for (int i = 5; i < 6; i++) {
-            new Artillery(theContext, i + 1, i + 1, GameEngine.red);
+            new Artillery(theContext, 13, i, GameEngine.red);
         }
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
 
@@ -119,9 +120,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
             canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + units.length + " " , 2000, 1000, paint);
 
+            //draws yellow squares where selected unit can move.
+            if (GameEngine.theUnit != null) {
+                for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
+                    for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
+                        if (GameEngine.BoardSprites[i][j] == null &&
+                                (GameEngine.theUnit.movement >= GameEngine.getSquareDistance           //also check if unit is in range.
+                                (GameEngine.getCoordinates(GameEngine.theUnit)[0], i,
+                                        GameEngine.getCoordinates(GameEngine.theUnit)[1], j))) {
+                            movableLocation temp = new movableLocation(theContext);
+                            temp.draw(canvas, i, j);
+                        }
+                    }
+                }
+            }
         }
     }
 
+    //removes the sprite (drawing of a unit), called when unit is deleted.
     public static void removeSprite (int index) {
         Units[] toReplace = new Units[units.length - 1];
         for (int i = 0; i < index; i++) {

@@ -13,11 +13,15 @@ public class Units {
     public String unitType;
     public int[] coordinates = new int[]{14, 8}; //Unit's coordinates, because this is the coordinates of the image value must be multiplied by 128 to display on board properly.
     public Player owner;
-    public int attack;
+    public int attack1;
+    public int attack2;
+    public int attack1Range;
+    public int attack2Range;
     public int defence;
     public int HP;
     public int maxHP;
     public int movement;
+
 
     //Two methods below are from previous versions of the code, I might need them again later.
     /*public Units(Bitmap bmp) {
@@ -46,10 +50,13 @@ public class Units {
         GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
     }*/
 
-    //creates a new unit and initializes icon to Infantry unit, and sets the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
-    public Units(Context context, int x, int y, Player player, String unitType, int atc, int def, int hp, int maxhp, int mov) {
+    //creates a new unit, initialize icon to it's unit type, attribute attack and defence values,and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
+    public Units(Context context, int x, int y, Player player, String unitType, int atc1, int atc2, int atc1r, int atc2r,int def, int hp, int maxhp, int mov) {
 
-        this.attack = atc;
+        this.attack1 = atc1;
+        this.attack2 = atc2;
+        this.attack1Range = atc1r;
+        this.attack2Range = atc2r;
         this.defence = def;
         this.HP = hp;
         this.maxHP = maxhp;

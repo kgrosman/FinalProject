@@ -2,10 +2,10 @@ package com.example.filip.finalproject;
 
 public class Player {
 
-    public String name;
-    public int[] upgrades = new int[10];
+    public String color; //Player's color
+    public int[] upgrades = new int[10]; //Player's upgrades, empty for now
 
     Player (String str) {
-        name = str;
+        color = str;
     }
 }
