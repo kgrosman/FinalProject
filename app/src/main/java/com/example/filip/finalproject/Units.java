@@ -13,6 +13,8 @@ public class Units {
     public String unitType;
     public int[] coordinates = new int[]{14, 8}; //Unit's coordinates, because this is the coordinates of the image value must be multiplied by 128 to display on board properly.
     public Player owner;
+    public boolean hasMove = true;
+    public boolean hasAttack = true;
     public int attack1;
     public int attack2;
     public int attack1Range;

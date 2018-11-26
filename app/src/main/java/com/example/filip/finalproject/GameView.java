@@ -74,7 +74,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             new Artillery(theContext, 13, i, GameEngine.red);
         }
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
-
+        GameEngine.playing = GameEngine.green;
         thread.start(); // starts the tread
 
     }
@@ -118,10 +118,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             paint.setTextSize(60);
             paint.setColor(Color.RED);
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
-            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + units.length + " " , 2000, 1000, paint);
+            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + Player.print(GameEngine.playing) + " " , 2000, 1000, paint);
 
             //draws yellow squares where selected unit can move.
-            if (GameEngine.theUnit != null) {
+            if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
                 for (int i = 0; i < GameEngine.BoardSprites.length; i++) {
                     for (int j = 0; j < GameEngine.BoardSprites[i].length; j++) {
                         if (GameEngine.BoardSprites[i][j] == null &&

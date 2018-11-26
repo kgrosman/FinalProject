@@ -8,4 +8,7 @@ public class Player {
     Player (String str) {
         color = str;
     }
+    public static String print(Player p) {
+        return p.color;
+    }
 }

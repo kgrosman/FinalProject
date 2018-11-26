@@ -9,7 +9,7 @@ import android.graphics.Canvas;
 public class SelectedUnit {
 
     private Bitmap icon; // Unit's icon
-    private int[] coordinates = new int[]{0, 0}; //Unit's coordinates
+    public int[] coordinates = new int[]{0, 0}; //Unit's coordinates
     public Player owner;
 
     SelectedUnit(Context context,int x ,int y, Player player, String unitType) { //Creates a selected unit on given coordinates

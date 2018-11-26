@@ -33,12 +33,12 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        GameView myGameView = new GameView(this);
-        myGameView.setOnTouchListener(this);
-        setContentView(myGameView);
+        super.onCreate(savedInstanceState); //creates image?
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN); //sets game to fullscreen
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE); // flips game horizontally
+        GameView myGameView = new GameView(this); //creates context
+        myGameView.setOnTouchListener(this); //sets listener
+        setContentView(myGameView); //sets context
 
 
     }
@@ -48,7 +48,7 @@ public class FullscreenActivity extends Activity implements View.OnTouchListener
      */
     @Override
     public boolean onTouch (View view, MotionEvent event) {
-        GameEngine.tapProcessor((int) event.getX(), (int) event.getY());
+        GameEngine.tapProcessor((int) event.getX(), (int) event.getY()); //sends coordinates to GameEngine, which does everything.
         return true;
     }
 

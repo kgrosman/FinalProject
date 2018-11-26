@@ -9,11 +9,11 @@ import android.graphics.Canvas;
 
 public class movableLocation {
 
-    public Bitmap icon;
+    public Bitmap icon; //adds icon
 
     public movableLocation(Context context) {
 
-        BitmapFactory.Options o = new Options();
+        BitmapFactory.Options o = new Options(); //get resource
         o.inScaled = false;
         icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.yellow, o);
     }
