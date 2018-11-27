@@ -68,32 +68,32 @@ public class Units {
         if (owner == GameEngine.green && unitType.equals("Infantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infg2, o);
         }
         if (owner == GameEngine.red && unitType.equals("Infantry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.infr2, o);
         }
         if (owner == GameEngine.green && unitType.equals("Cavalry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavg, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavg2, o);
         }
         if (owner == GameEngine.red && unitType.equals("Cavalry")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavr, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.cavr2, o);
         }
         if (owner == GameEngine.green && unitType.equals("Artillery")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artg, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artg2, o);
         }
         if (owner == GameEngine.red && unitType.equals("Artillery")) {
             BitmapFactory.Options o = new Options();
             o.inScaled = false;
-            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr, o);
+            icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.artr2, o);
         }
 
         coordinates[0] = x;
@@ -118,4 +118,7 @@ public class Units {
         canvas.drawBitmap(icon, coordinates[0] * 128, coordinates[1] * 128, null);
     }
 
+    public void draw(Canvas canvas, int x, int y) {
+        canvas.drawBitmap(icon, x, y, null);
+    }
 }

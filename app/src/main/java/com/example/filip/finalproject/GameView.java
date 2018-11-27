@@ -22,6 +22,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public MainThread thread; //Game's thread. Copied from net, I have no idea why this is important :)
     public GameEngine grid = null; // Grid of the game
     public static SelectedUnit selected = null; //Selected unit
+    public static SelectedUnit enemySelected = null;
     public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, BoardSprites does that).
 
     //also copied from internet, obviously important but I have no idea what it does.
@@ -74,6 +75,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             new Artillery(theContext, 13, i, GameEngine.red);
         }
         selected = new SelectedUnit(theContext); // adds selected unit to the board, but doesn't show it until it has to.
+        enemySelected = new SelectedUnit(theContext);
         GameEngine.playing = GameEngine.green;
         thread.start(); // starts the tread
 
@@ -113,12 +115,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 GameEngine.selected.draw(canvas); //If they are, draw it.
             }
 
+            if (GameEngine.enemySelected != null) { //If no units are selected yet, do nothing
+                GameEngine.enemySelected.draw(canvas); //If they are, draw it.
+            }
+
             //bottom five lines draw the text that displays the tap coordinates, should be removed in final version.
             Paint paint = new Paint();
             paint.setTextSize(60);
             paint.setColor(Color.RED);
             int[] tapCoord = GameEngine.getSquareCoordinates(GameEngine.lastTap[0], GameEngine.lastTap[1]);
-            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + Player.print(GameEngine.playing) + " " , 2000, 1000, paint);
+            canvas.drawText( tapCoord[0]+ " " + tapCoord[1] + " " + Player.print(GameEngine.playing) + " " , 2000, 70, paint);
 
             //draws yellow squares where selected unit can move.
             if (GameEngine.theUnit != null && GameEngine.theUnit.hasMove == true) {
@@ -133,6 +139,78 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         }
                     }
                 }
+            }
+            if (GameEngine.theUnit != null) {
+                GameEngine.theUnit.draw(canvas, 1950, 1040);
+                paint = new Paint();
+                paint.setTextSize(30);
+                if (GameEngine.theUnit.owner == GameEngine.red) {
+                    paint.setColor(Color.RED);
+                }
+                if (GameEngine.theUnit.owner == GameEngine.green) {
+                    paint.setColor(Color.GREEN);
+                }
+                int[] unitInfo = {GameEngine.theUnit.attack1,
+                        GameEngine.theUnit.attack1Range,
+                        GameEngine.theUnit.attack2,
+                        GameEngine.theUnit.attack2Range,
+                        GameEngine.theUnit.HP,
+                        GameEngine.theUnit.maxHP,
+                        GameEngine.theUnit. defence,
+                };
+                String[] canMoveAndAttack = new String[2];
+                if (GameEngine.theUnit.hasMove) {
+                    canMoveAndAttack[0] = "can move this turn";
+                }   else {
+                    canMoveAndAttack[0] = "cannot move this turn";
+                }
+                if (GameEngine.theUnit.hasAttack) {
+                    canMoveAndAttack[1] = "can attack this turn";
+                }   else {
+                    canMoveAndAttack[1] = "cannot attack this turn";
+                }
+                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000, 1220, paint);
+                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000, 1260, paint);
+                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000, 1300, paint);
+                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000, 1340, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[0], 2000, 1380, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1420, paint);
+            }
+            if (GameEngine.enemyTappedUnit != null) {
+                GameEngine.enemyTappedUnit.draw(canvas, 1950, 640);
+                paint = new Paint();
+                paint.setTextSize(30);
+                if (GameEngine.enemyTappedUnit.owner == GameEngine.red) {
+                    paint.setColor(Color.RED);
+                }
+                if (GameEngine.enemyTappedUnit.owner == GameEngine.green) {
+                    paint.setColor(Color.GREEN);
+                }
+                int[] unitInfo = {GameEngine.enemyTappedUnit.attack1,
+                        GameEngine.enemyTappedUnit.attack1Range,
+                        GameEngine.enemyTappedUnit.attack2,
+                        GameEngine.enemyTappedUnit.attack2Range,
+                        GameEngine.enemyTappedUnit.HP,
+                        GameEngine.enemyTappedUnit.maxHP,
+                        GameEngine.enemyTappedUnit. defence,
+                };
+                String[] canMoveAndAttack = new String[2];
+                if (GameEngine.enemyTappedUnit.hasMove) {
+                    canMoveAndAttack[0] = "can move this turn";
+                }   else {
+                    canMoveAndAttack[0] = "cannot move this turn";
+                }
+                if (GameEngine.enemyTappedUnit.hasAttack) {
+                    canMoveAndAttack[1] = "can attack this turn";
+                }   else {
+                    canMoveAndAttack[1] = "cannot attack this turn";
+                }
+                canvas.drawText( "Close attack damage :    " + unitInfo[0] + "  Range : "  + unitInfo[1], 2000, 820, paint);
+                canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000, 860, paint);
+                canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000, 900, paint);
+                canvas.drawText( "Unit's defence : " + unitInfo[6], 2000, 940, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[0], 2000, 980, paint);
+                canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1020, paint);
             }
         }
     }

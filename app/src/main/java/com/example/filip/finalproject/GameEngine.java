@@ -14,6 +14,8 @@ public class GameEngine {
 
     public Bitmap image; // Image of the grid
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
+    public static Units enemyTappedUnit = null;
+    public static SelectedUnit enemySelected = null;
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
     public static Units[][] BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
     public static Player green; //stores the reference to a player that is in charge of Green units
@@ -32,7 +34,7 @@ public class GameEngine {
 
     //draws the board when grid.draw(canvas) is called in GameView function.
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(image, 0.0f, 0.0f, null);
+        canvas.drawBitmap(image, -1.0f, -1.0f, null);
     }
     /*
     A method that will process what happens with user's input (click/tap).
@@ -43,14 +45,16 @@ public class GameEngine {
             return;
         }
 
-        if (x / 128 == 16 && y / 128 == 6 && selected != null) { //un-selects the unit
+        if (x / 128 == 16 && y / 128 == 6 && (selected != null || enemySelected  != null)) { //un-selects the unit
             selected = null;
             theUnit = null;
+            enemySelected = null;
+            enemyTappedUnit = null;
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
             return;
         }
-        if (x / 128 == 16 && y / 128 == 8  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) && theUnit == null) { //switches active player.
+        if (x / 128 == 16 && y / 128 == 8  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) && theUnit == null && enemyTappedUnit == null) { //switches active player.
             if (playing == green) {
                 playing = red;
             }
@@ -86,12 +90,19 @@ public class GameEngine {
             return;
         }
 
+        //If user taps on his unit, select it, or display info on enemy unit.
         if (BoardSprites[x / 128][y / 128] != null
-                && theUnit == null && BoardSprites[x / 128][y / 128].owner == playing
-                && (BoardSprites[x / 128][y / 128].hasMove == true || BoardSprites[x / 128][y / 128].hasAttack == true)) { //If no unit is selected and user taps on a unit, select it.
-            theUnit = BoardSprites[x / 128][y / 128];
-            selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
-            return;
+                && ((BoardSprites[x / 128][y / 128].hasMove == true || BoardSprites[x / 128][y / 128].hasAttack == true) || (BoardSprites[x / 128][y / 128].owner != playing))) {
+            if (BoardSprites[x / 128][y / 128].owner == playing) {
+                theUnit = BoardSprites[x / 128][y / 128];
+                selected = new SelectedUnit(GameView.theContext, x, y, theUnit.owner, theUnit.unitType);
+                return;
+            }
+            else if (BoardSprites[x / 128][y / 128].owner != playing) {
+                enemyTappedUnit = BoardSprites[x / 128][y / 128];
+                enemySelected = new SelectedUnit(GameView.theContext, x, y, BoardSprites[x / 128][y / 128].owner, BoardSprites[x / 128][y / 128].unitType);
+            }
+
         }
         if (theUnit != null && BoardSprites[x / 128][y / 128] == null && //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
                 (theUnit.movement >= getSquareDistance           //also check if unit is in range.
@@ -192,6 +203,8 @@ public class GameEngine {
             for (int i = 0; i < GameView.units.length; i++) {
                 if (GameView.units[i] == u) {
                     GameView.removeSprite(i);
+                    enemyTappedUnit = null;
+                    GameView.enemySelected = null;
                     return;
                 }
             }
