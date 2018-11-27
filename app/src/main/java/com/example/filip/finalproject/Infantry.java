@@ -4,6 +4,7 @@ import android.content.Context;
 
 public class Infantry extends Units {
 
+    // TODO : fix these comments
     public static int GreenAttack1 = 11; //  Green infantry's first attack value, this value can be changed
     public static int GreenAttack2 = 2; //  Green infantry's second attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green infantry's first attack range, this value can be changed

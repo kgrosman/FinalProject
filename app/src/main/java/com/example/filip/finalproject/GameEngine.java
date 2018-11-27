@@ -14,13 +14,13 @@ public class GameEngine {
 
     public Bitmap image; // Image of the grid
     public static Units theUnit = null; // Selected unit, unlike the selected unit in GameView class this unit is the actual selected unit.
-    public static Units enemyTappedUnit = null;
-    public static SelectedUnit enemySelected = null;
     public static SelectedUnit selected = null; // Selected unit, reference is not the same as the (selected) Unit itself.
+    public static Units enemyTappedUnit = null; //same as above, but of opponent
+    public static SelectedUnit enemySelected = null; // same as above, but for opponent
     public static Units[][] BoardSprites = new Units[15][9]; //A 2D array of Units that stores the units for game engine and data processing, unlike GameView's Units[] this isn't involved in drawing units.
     public static Player green; //stores the reference to a player that is in charge of Green units
     public static Player red;//stores the reference to a player that is in charge of Red units
-    public static Player playing = null;
+    public static Player playing = null; //player that makes moves
 
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
     public GameEngine(Bitmap bmp) {
@@ -41,11 +41,13 @@ public class GameEngine {
      */
     public static void tapProcessor (int x, int y) {
 
-        if (selected != null && x/128 == selected.coordinates[0] && y / 128 == selected.coordinates[1]) { //This makes sure that unit gets tapped only once.
+        //This makes sure that unit gets tapped only once.
+        if (selected != null && x/128 == selected.coordinates[0] && y / 128 == selected.coordinates[1]) {
             return;
         }
 
-        if (x / 128 == 16 && y / 128 == 6 && (selected != null || enemySelected  != null)) { //un-selects the unit
+        //un-selects the unit if the button is pressed TODO : make the button visible
+        if (x / 128 == 16 && y / 128 == 6 && (selected != null || enemySelected  != null)) {
             selected = null;
             theUnit = null;
             enemySelected = null;
@@ -54,7 +56,8 @@ public class GameEngine {
             lastTap[1] = y;
             return;
         }
-        if (x / 128 == 16 && y / 128 == 8  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) && theUnit == null && enemyTappedUnit == null) { //switches active player.
+        //switches active player if the button is pressed. TODO : make the button visible.
+        if (x / 128 == 16 && y / 128 == 8  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) && theUnit == null && enemyTappedUnit == null) {
             if (playing == green) {
                 playing = red;
             }
@@ -82,11 +85,13 @@ public class GameEngine {
         lastTap[0] = x; //sets the lastTap coordinates
         lastTap[1] = y;
 
-        if (x / 128 >= 15 || y / 128 >= 9) { // If tap is outside the grid, do nothing.
+        // If tap is outside the grid, do nothing.
+        if (x / 128 >= 15 || y / 128 >= 9) {
             return;
         }
 
-        if (selected == null && BoardSprites[x / 128][y / 128] == null) { //if user taps on empty square with no units selected, do nothing
+        //if user taps on empty square with no units selected, do nothing
+        if (selected == null && BoardSprites[x / 128][y / 128] == null) {
             return;
         }
 
@@ -104,17 +109,20 @@ public class GameEngine {
             }
 
         }
-        if (theUnit != null && BoardSprites[x / 128][y / 128] == null && //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
+        //if user taps with unit selected on an empty square, move it TODO : make sure unit cannot move over another unit
+        if (theUnit != null && BoardSprites[x / 128][y / 128] == null &&
                 (theUnit.movement >= getSquareDistance           //also check if unit is in range.
                         (getCoordinates(theUnit)[0], x / 128,
                                 getCoordinates(theUnit)[1], y / 128))
                 && theUnit.hasMove == true) {
             moveTo(theUnit, x / 128, y / 128); //and then move the unit, and un-select it.
-            if (theUnit.hasAttack) { //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
+            //if unit has attack, don't un-select it yet. TODO : if no units are in range, un-select it because it cannot attack anyway
+            if (theUnit.hasAttack) {
                 theUnit.hasMove = false;
                 return;
             }
-            if (!(theUnit.hasAttack)) { //if units doesn't have an attack, un-select it
+            //if units doesn't have an attack, un-select it
+            if (!(theUnit.hasAttack)) {
                 theUnit.hasMove = false;
                 selected = null;
                 theUnit = null;
@@ -122,18 +130,21 @@ public class GameEngine {
             }
         }
 
+        //if player taps with unit selected on an opponent's unit, attack it
         if (theUnit != null && BoardSprites[x / 128][y / 128] != null &&
-                BoardSprites[x / 128][y / 128].owner != theUnit.owner && //if user taps with unit selected on an opponent's unit, attack it
+                BoardSprites[x / 128][y / 128].owner != theUnit.owner &&
                 (theUnit.attack1Range >= getSquareDistance           //and check if unit is in range of first (stronger) attack.
                         (getCoordinates(theUnit)[0], x / 128,
                                 getCoordinates(theUnit)[1], y / 128))
                 && theUnit.hasAttack == true) {
             DamageUnit(BoardSprites[x / 128][y / 128].attack1, BoardSprites[x / 128][y / 128], x / 128, y / 128); //and then move the unit, and un-select it.
-            if (theUnit.hasMove) { //if unit has a move, don't un-select it yet.
+            //if unit has a move, don't un-select it yet.
+            if (theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 return;
             }
-            if (!theUnit.hasMove) {  //if units doesn't have a move, un-select it
+            //if units doesn't have a move, un-select it
+            if (!theUnit.hasMove) {
                 theUnit.hasAttack = false;
                 selected = null;
                 theUnit = null;
@@ -141,8 +152,9 @@ public class GameEngine {
             }
         }
 
+        //if user taps with unit selected on an opponent's unit, attack it
         if (theUnit != null && BoardSprites[x / 128][y / 128] != null &&
-                BoardSprites[x / 128][y / 128].owner != theUnit.owner && //if user taps with unit selected on an opponent's unit, attack it
+                BoardSprites[x / 128][y / 128].owner != theUnit.owner &&
                 (theUnit.attack2Range >= getSquareDistance           //and check if unit is in range of second (weaker) attack.
                         (getCoordinates(theUnit)[0], x / 128,
                                 getCoordinates(theUnit)[1], y / 128))
@@ -160,13 +172,15 @@ public class GameEngine {
             }
         }
 
-        if (selected != null) { //If user taps on a square that is out of range while some unit is selected, do nothing
+        //If user taps on a square that is out of range while some unit is selected, do nothing (this could be changed later)
+        if (selected != null) {
             return;
         }
 
     }
 
-    public static int[] getCoordinates (Units u) { //gets the coordinates of the unit.
+    //gets the coordinates of the unit.
+    public static int[] getCoordinates (Units u) {
         for (int i = 0; i < BoardSprites.length; i++) {
             for (int j = 0; j < BoardSprites[i].length; j++) {
                 if (BoardSprites[i][j] == u) {
@@ -177,7 +191,8 @@ public class GameEngine {
         return null;
     }
 
-    public static void moveTo(Units u, int x, int y) { //moves the unit to x and y
+    //moves the unit to x and y
+    public static void moveTo(Units u, int x, int y) {
         int a = 0, b = 0;
         for (int i = 0; i < BoardSprites.length; i++) {
             for (int j = 0; j < BoardSprites[i].length; j++) {
@@ -194,11 +209,11 @@ public class GameEngine {
         BoardSprites[a][b] = null;
     }
 
-    public static void DamageUnit(int damage, Units u, int x, int y) { //damages the unit at given coordinates
-
+    //damages the unit at given coordinates
+    public static void DamageUnit(int damage, Units u, int x, int y) {
         BoardSprites[x][y].HP -= (damage - BoardSprites[x][y].defence);
-
-        if (BoardSprites[x][y].HP <= 0) { //if unit has less than 1HP, remove it
+        //if unit has less than 1HP, remove it
+        if (BoardSprites[x][y].HP <= 0) {
             BoardSprites[x][y] = null;
             for (int i = 0; i < GameView.units.length; i++) {
                 if (GameView.units[i] == u) {

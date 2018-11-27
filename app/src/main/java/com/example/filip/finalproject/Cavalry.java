@@ -4,6 +4,7 @@ import android.content.Context;
 
 public class Cavalry extends Units{
 
+    // TODO : fix these comments
     public static int GreenAttack1 = 9; // Green Cavalry's first attack value, this value can be changed
     public static int GreenAttack2 = 1; //  Green Cavalry's first attack value, this value can be changed
     public static int GreenFirstAttackRange = 1; //  Green Cavalry's first attack range, this value can be changed

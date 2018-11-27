@@ -21,8 +21,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static Context theContext; //context of the View, required for adding textures to units in other classes.
     public MainThread thread; //Game's thread. Copied from net, I have no idea why this is important :)
     public GameEngine grid = null; // Grid of the game
-    public static SelectedUnit selected = null; //Selected unit
-    public static SelectedUnit enemySelected = null;
+    public static SelectedUnit selected = null; //Player's selected unit
+    public static SelectedUnit enemySelected = null; //opponent's selected unit
     public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, BoardSprites does that).
 
     //also copied from internet, obviously important but I have no idea what it does.
@@ -53,6 +53,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         theContext = this.getContext(); // Stores the context, see the variable comment above
 
         // These for loops create starting units.
+
+        new Headquaters(theContext, 1, 1, GameEngine.green);
+        new Headquaters(theContext, 13, 7, GameEngine.red);
         for (int i = 0; i < 3; i++) {
             new Infantry(theContext, 2, i * 2, GameEngine.green);
         }
@@ -140,6 +143,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     }
                 }
             }
+            //display info about player's selected unit
             if (GameEngine.theUnit != null) {
                 GameEngine.theUnit.draw(canvas, 1950, 1040);
                 paint = new Paint();
@@ -156,7 +160,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                         GameEngine.theUnit.attack2Range,
                         GameEngine.theUnit.HP,
                         GameEngine.theUnit.maxHP,
-                        GameEngine.theUnit. defence,
+                        GameEngine.theUnit.defence,
                 };
                 String[] canMoveAndAttack = new String[2];
                 if (GameEngine.theUnit.hasMove) {
@@ -173,9 +177,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000, 1260, paint);
                 canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000, 1300, paint);
                 canvas.drawText( "Unit's defence : " + unitInfo[6], 2000, 1340, paint);
-                canvas.drawText( "This unit " + canMoveAndAttack[0], 2000, 1380, paint);
+                if (GameEngine.theUnit.movement != 0) {
+                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000, 1380, paint);
+                } else {
+                    canvas.drawText("This unit cannot move", 2000, 1380, paint);
+                }
                 canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1420, paint);
             }
+
+            //display info about opponent's selected unit
             if (GameEngine.enemyTappedUnit != null) {
                 GameEngine.enemyTappedUnit.draw(canvas, 1950, 640);
                 paint = new Paint();
@@ -209,7 +219,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText( "Ranged attack damage : " + unitInfo[2] + "  Range : "  + unitInfo[3], 2000, 860, paint);
                 canvas.drawText( "Health : " + unitInfo[4] + " / "  + unitInfo[5], 2000, 900, paint);
                 canvas.drawText( "Unit's defence : " + unitInfo[6], 2000, 940, paint);
-                canvas.drawText( "This unit " + canMoveAndAttack[0], 2000, 980, paint);
+                if (GameEngine.enemyTappedUnit.movement != 0) {
+                    canvas.drawText("This unit " + canMoveAndAttack[0], 2000, 980, paint);
+                } else {
+                    canvas.drawText("This unit cannot move", 2000, 980, paint);
+                }
                 canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1020, paint);
             }
         }
