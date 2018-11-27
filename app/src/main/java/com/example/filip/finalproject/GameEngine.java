@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.util.EventLog;
 import android.graphics.Canvas;
 import java.lang.Math;
-import java.util.Objects;
 
 // Class that will run the game and manage all the events.
 public class GameEngine {
@@ -21,6 +20,7 @@ public class GameEngine {
     public static Player green; //stores the reference to a player that is in charge of Green units
     public static Player red;//stores the reference to a player that is in charge of Red units
     public static Player playing = null; //player that makes moves
+    public static Resources[][] BoardResources = new Resources[15][9];
 
     //Constructor that creates the unit and it's image, doesn't set it's coordinates. Mostly used by onDraw function in GameView
     public GameEngine(Bitmap bmp) {
@@ -74,6 +74,17 @@ public class GameEngine {
                     if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner != playing) {
                         BoardSprites[i][j].hasMove = false;
                         BoardSprites[i][j].hasAttack = false;
+                    }
+                }
+            }
+            //gives harvested resources to next player
+            for (int i = 0; i < BoardResources.length; i++) {
+                for (int j = 0; j < BoardResources[i].length; j++) {
+                    //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
+                    if (BoardResources[i][j]!= null && BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
+                        if (BoardResources[i][j].resourceType.equals("oil")) {
+                            playing.oilStorage++;
+                        }
                     }
                 }
             }

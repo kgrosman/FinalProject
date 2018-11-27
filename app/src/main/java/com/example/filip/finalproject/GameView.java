@@ -24,6 +24,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public static SelectedUnit selected = null; //Player's selected unit
     public static SelectedUnit enemySelected = null; //opponent's selected unit
     public static Units[] units = new Units[0]; // Array of units that will be drawn, they don't have the physical location on board (In GameEngine class, BoardSprites does that).
+    public static Resources[] resources = new Resources[0]; // Array of resources that will be drawn, they don't have the physical location on board (In GameEngine class, BoardResources does that).
 
     //also copied from internet, obviously important but I have no idea what it does.
     public GameView(Context context) {
@@ -54,6 +55,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         // These for loops create starting units.
 
+        new oil(theContext,13, 8, 13, 7);
         new Headquaters(theContext, 1, 1, GameEngine.green);
         new Headquaters(theContext, 13, 7, GameEngine.red);
         for (int i = 0; i < 3; i++) {
@@ -109,6 +111,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         if (canvas != null) {
             grid.draw(canvas);  //draws the grid first, because that is the bottom layer.
+
+            for (int i = 0; i < resources.length; i++) {
+                resources[i].draw(canvas); //draws the units from units array found in GameView class.
+            }
 
             for (int i = 0; i < units.length; i++) {
                 units[i].draw(canvas); //draws the units from units array found in GameView class.
@@ -227,6 +233,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 canvas.drawText( "This unit " + canMoveAndAttack[1], 2000, 1020, paint);
             }
         }
+        Paint paint = new Paint();
+        paint.setTextSize(60);
+        paint.setColor(Color.GRAY);
+        canvas.drawText( "Oil : " + GameEngine.playing.oilStorage, 50, 1200, paint);
+
+
     }
 
     //removes the sprite (drawing of a unit), called when unit is deleted.

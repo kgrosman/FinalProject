@@ -9,7 +9,7 @@ import android.graphics.Canvas;
 
 /* When creating a new unit type :
     1. create a new class, and create (or copy) stats and constructor
-    2. Create an images (green, red, selected and regular) of your unit and add it as icon in units class (and in unit's constructor) and SelectedUnit class
+    2. Create images (green, red, selected and regular) of your unit and add it as icon in units class (and in unit's constructor) and SelectedUnit class
     3. Make it available to buy/start with
 */
 public class Units {
