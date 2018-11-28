@@ -56,38 +56,20 @@ public class GameEngine {
             lastTap[1] = y;
             return;
         }
+
+        //buys new unit for two oil TODO : make button visible and change resources required
+        if (x / 128 == 16 && y / 128 == 4 &&
+                BoardSprites[14][8] == null &&
+                ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128))) {
+            if (playing.oilStorage > 1) {
+                new Infantry(GameView.theContext,14,8,playing);
+                playing.oilStorage -=2;
+            }
+        }
+
         //switches active player if the button is pressed. TODO : make the button visible.
         if (x / 128 == 16 && y / 128 == 8  && ((lastTap[0] / 128 != x / 128) || (lastTap[1] / 128 != y / 128)) && theUnit == null && enemyTappedUnit == null) {
-            if (playing == green) {
-                playing = red;
-            }
-            else if (playing == red) {
-                playing = green;
-            }
-            // gives movement and attack to next player's units
-            for (int i = 0; i < BoardSprites.length; i++) {
-                for (int j = 0; j < BoardSprites[i].length; j++) {
-                    if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner == playing) {
-                        BoardSprites[i][j].hasMove = true;
-                        BoardSprites[i][j].hasAttack = true;
-                    }
-                    if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner != playing) {
-                        BoardSprites[i][j].hasMove = false;
-                        BoardSprites[i][j].hasAttack = false;
-                    }
-                }
-            }
-            //gives harvested resources to next player
-            for (int i = 0; i < BoardResources.length; i++) {
-                for (int j = 0; j < BoardResources[i].length; j++) {
-                    //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
-                    if (BoardResources[i][j]!= null && BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
-                        if (BoardResources[i][j].resourceType.equals("oil")) {
-                            playing.oilStorage++;
-                        }
-                    }
-                }
-            }
+            switchPlayer();
             lastTap[0] = x; //sets the lastTap coordinates
             lastTap[1] = y;
             return;
@@ -255,5 +237,39 @@ public class GameEngine {
             deltaY *= - 1;
         }
         return deltaX + deltaY;
+    }
+
+    //switches the player when called
+    public static void switchPlayer(){
+        if (playing == green) {
+            playing = red;
+        }
+        else if (playing == red) {
+            playing = green;
+        }
+        // gives movement and attack to next player's units
+        for (int i = 0; i < BoardSprites.length; i++) {
+            for (int j = 0; j < BoardSprites[i].length; j++) {
+                if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner == playing) {
+                    BoardSprites[i][j].hasMove = true;
+                    BoardSprites[i][j].hasAttack = true;
+                }
+                if (BoardSprites[i][j]!= null && BoardSprites[i][j].owner != playing) {
+                    BoardSprites[i][j].hasMove = false;
+                    BoardSprites[i][j].hasAttack = false;
+                }
+            }
+        }
+        //gives harvested resources to next player
+        for (int i = 0; i < BoardResources.length; i++) {
+            for (int j = 0; j < BoardResources[i].length; j++) {
+                //this long if statement checks if BoardResource[i][j] should yield a resource to the player.
+                if (BoardResources[i][j]!= null && BoardSprites[BoardResources[i][j].collectorCoordinates[0]][BoardResources[i][j].collectorCoordinates[1]].owner == playing) {
+                    if (BoardResources[i][j].resourceType.equals("oil")) {
+                        playing.oilStorage++;
+                    }
+                }
+            }
+        }
     }
 }
