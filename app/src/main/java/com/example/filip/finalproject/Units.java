@@ -1,10 +1,9 @@
 package com.example.filip.finalproject;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
-import android.util.EventLog;
-import android.content.Context;
 import android.graphics.Canvas;
 
 /* When creating a new unit type :
@@ -56,11 +55,7 @@ public class Units {
         GameView.units = toReturn;
         GameEngine.BoardSprites[coordinates[0]][coordinates[1]] = this;
     }*/
-
-    //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
-    public Units(Context context, int x, int y, Player player, String unitType, int atc1, int atc2, int atc1r, int atc2r,int def, int hp, int maxhp, int mov) {
-
-        //see above for meaning of these values
+    public void setParameters(int atc1, int atc2, int atc1r, int atc2r,int def, int hp, int maxhp, int mov) {
         this.attack1 = atc1;
         this.attack2 = atc2;
         this.attack1Range = atc1r;
@@ -69,6 +64,13 @@ public class Units {
         this.HP = hp;
         this.maxHP = maxhp;
         this.movement = mov;
+    }
+
+    //creates a new unit, initialize icon to it's unit type, attribute attack, defence and HP values, and set the owner. It also adds it to GaveView's units array and to GameEngine's Object[][] array.
+    public Units(Context context, int x, int y, Player player, String unitType) {
+
+        //see above for meaning of these values
+
         this.unitType = unitType;
         this.owner = player;
 
